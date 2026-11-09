@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KantinKu - Makan Siang Tanpa Antre</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Mobile Frame Container -->
+  <main class="device-wrapper" id="app-container">
+
+    <!-- Top Status Bar (matches screenshot) -->
+    <header class="status-bar">
+      <span id="status-time">11.45</span>
+      <div class="wifi-battery">
+        <span>WI-FI - 100%</span>
+      </div>
+    </header>
+
+    <!-- App Navigation Header -->
+    <nav class="app-header">
+      <!-- Left: Hamburger Menu (changes to Back Arrow when category is selected) -->
+      <button class="header-btn" id="header-left-btn" aria-label="Menu navigasi" title="Menu Kantin">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Center Brand Title -->
+      <h1 class="app-title">KantinKu</h1>
+
+      <!-- Right: Shopping Cart Bag -->
+      <div class="cart-btn-wrapper">
+        <button class="header-btn" onclick="openCart()" aria-label="Keranjang belanja" title="Lihat Keranjang">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </button>
+        <span class="cart-badge" id="cart-badge">0</span>
+      </div>
+    </nav>
+
+    <!-- Main Content Area with Scroll -->
+    <div class="app-body">
+
+      <!-- ==========================================
+           TAB 1: MENU (Main Screen matching mockup)
+           ========================================== -->
+      <section class="tab-view active" id="view-menu">
+
+        <!-- Hero Headline -->
+        <div class="hero-banner">
+          <h2 class="hero-title">
+            Makan siang ,<br>
+            tanpa antre.
+          </h2>
+          <p class="hero-subtitle">Pesan dulu. Ambil saat jeda kuliah.</p>
+
+          <!-- Location & Hours Badge -->
+          <div class="location-badge">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span>Kantin kampus &middot; Buka sampai 16.00</span>
+          </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+          <div class="search-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            class="search-input" 
+            id="search-input" 
+            placeholder="Cari makanan atau minuman" 
+            autocomplete="off"
+            aria-label="Cari makanan atau minuman"
+          >
+          <button class="search-clear-btn" id="search-clear-btn" aria-label="Hapus pencarian">&times;</button>
+        </div>
+
+        <!-- Category Filter Chips -->
+        <div class="category-chips" id="category-chips" role="tablist">
+          <button class="chip active" data-category="Semua" role="tab">Semua</button>
+          <button class="chip" data-category="Makanan" role="tab">Makanan</button>
+          <button class="chip" data-category="Minuman" role="tab">Minuman</button>
+        </div>
+
+        <!-- Section Header -->
+        <div class="section-header">
+          <h3 class="section-title">Pilihan hari ini</h3>
+          <span class="item-count-text" id="item-count-text"></span>
+        </div>
+
+        <!-- Dynamic Menu Cards List -->
+        <div class="menu-list" id="menu-list">
+          <!-- Dynamically populated by script.js -->
+        </div>
+
+        <!-- Bottom Note (matches mockup) -->
+        <p class="bottom-note">Harga jelas. Pesanan siap saat kamu datang.</p>
+      </section>
+
+
+      <!-- ==========================================
+           TAB 2: PESANAN (Active Orders / History)
+           ========================================== -->
+      <section class="tab-view" id="view-pesanan">
+        <div class="section-header" style="margin-top: 6px;">
+          <h3 class="section-title">Pesanan Saya</h3>
+        </div>
+        <div id="orders-list">
+          <!-- Dynamically rendered (Empty state or Order cards) -->
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           TAB 3: PROMO (Vouchers & Offers)
+           ========================================== -->
+      <section class="tab-view" id="view-promo">
+        <div class="section-header" style="margin-top: 6px; margin-bottom: 16px;">
+          <h3 class="section-title">Promo Mahasiswa</h3>
+        </div>
+
+        <div class="promo-list">
+          <!-- Promo Card 1 -->
+          <div class="promo-card">
+            <div class="promo-icon-box">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+              </svg>
+            </div>
+            <div class="promo-info">
+              <h4 class="promo-title">Diskon Mahasiswa Baru</h4>
+              <p class="promo-desc">Potongan Rp5.000 untuk transaksi pertama di KantinKu.</p>
+              <span class="promo-code-pill" onclick="usePromoCode('MHSBARU')">
+                <span>MHSBARU</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </span>
+            </div>
+          </div>
+
+          <!-- Promo Card 2 -->
+          <div class="promo-card">
+            <div class="promo-icon-box" style="background: #E8F5E9; color: #16A34A;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+              </svg>
+            </div>
+            <div class="promo-info">
+              <h4 class="promo-title">Gratis Es Teh Segar</h4>
+              <p class="promo-desc">Beli 2 porsi makanan apa saja, dapatkan gratis 1 gelas Es Teh manis.</p>
+              <span class="promo-code-pill" onclick="usePromoCode('ESTEHGRATIS')">
+                <span>ESTEHGRATIS</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </span>
+            </div>
+          </div>
+
+          <!-- Promo Card 3 -->
+          <div class="promo-card">
+            <div class="promo-icon-box" style="background: #EFF6FF; color: #2563EB;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </div>
+            <div class="promo-info">
+              <h4 class="promo-title">Paket Jeda Kuliah Hemat</h4>
+              <p class="promo-desc">Diskon 15% setiap pemesanan di jam 11.30 - 13.00 WIB.</p>
+              <span class="promo-code-pill" onclick="usePromoCode('JEDAKULIAH')">
+                <span>JEDAKULIAH</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           TAB 4: AKUN (Profile & Wallet)
+           ========================================== -->
+      <section class="tab-view" id="view-akun">
+        <div class="profile-card">
+          <div class="profile-avatar">RP</div>
+          <div class="profile-info">
+            <h3>Rian Pratama</h3>
+            <p>NIM: 22081010042</p>
+            <p style="font-size: 11.5px; color: var(--primary); font-weight: 700; margin-top: 3px;">Fakultas Ilmu Komputer</p>
+          </div>
+        </div>
+
+        <div class="wallet-card">
+          <div class="wallet-top">
+            <span>Saldo KantinPay</span>
+            <span>Dompet Digital Kampus</span>
+          </div>
+          <div class="wallet-balance" id="user-wallet-balance">Rp45.000</div>
+          <div class="wallet-actions">
+            <button class="wallet-btn" onclick="topUpKantinPay()">+ Isi Saldo Rp20.000</button>
+            <button class="wallet-btn" onclick="showToast('Riwayat transaksi tercatat rapi')">Riwayat</button>
+          </div>
+        </div>
+
+        <div style="background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-light); padding: 8px 16px;">
+          <div style="padding: 14px 0; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="showToast('Fitur metode pembayaran siap digunakan')">
+            <span style="font-size: 14px; font-weight: 600;">Metode Pembayaran</span>
+            <span style="color: var(--text-light);">&rsaquo;</span>
+          </div>
+          <div style="padding: 14px 0; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="showToast('Kantin Kampus buka pk 08.00 - 16.00 WIB')">
+            <span style="font-size: 14px; font-weight: 600;">Pusat Bantuan &amp; Kantin</span>
+            <span style="color: var(--text-light);">&rsaquo;</span>
+          </div>
+          <div style="padding: 14px 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="showToast('Versi KantinKu v1.2.0')">
+            <span style="font-size: 14px; font-weight: 600;">Tentang KantinKu</span>
+            <span style="color: var(--text-light); font-size: 12px;">v1.2.0</span>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /.app-body -->
+
+
+    <!-- ==========================================
+         BOTTOM NAVIGATION BAR (matches mockup)
+         ========================================== -->
+    <nav class="bottom-nav">
+      <!-- Tab 1: Menu -->
+      <button class="nav-item active" data-tab="menu" onclick="switchTab('menu')" aria-label="Menu Utama">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+        <span>Menu</span>
+      </button>
+
+      <!-- Tab 2: Pesanan -->
+      <button class="nav-item" data-tab="pesanan" onclick="switchTab('pesanan')" aria-label="Pesanan Saya">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>Pesanan</span>
+      </button>
+
+      <!-- Tab 3: Promo -->
+      <button class="nav-item" data-tab="promo" onclick="switchTab('promo')" aria-label="Promo & Diskon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        <span>Promo</span>
+      </button>
+
+      <!-- Tab 4: Akun -->
+      <button class="nav-item" data-tab="akun" onclick="switchTab('akun')" aria-label="Profil Akun">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Akun</span>
+      </button>
+    </nav>
+
+
+    <!-- ==========================================
+         DRAWER / MODAL: CART SHEET
+         ========================================== -->
+    <div class="cart-drawer" id="cart-drawer">
+      <div class="drawer-drag-pill"></div>
+      
+      <div class="drawer-header">
+        <h3 class="drawer-title">Keranjang Pesanan</h3>
+        <button class="close-drawer-btn" onclick="closeCart()" aria-label="Tutup keranjang">&times;</button>
+      </div>
+
+      <!-- Cart Item Rows -->
+      <div class="cart-items-container" id="cart-items-container">
+        <!-- Rendered by script.js -->
+      </div>
+
+      <!-- Payment Summary -->
+      <div class="cart-summary-box">
+        <div class="summary-row">
+          <span>Subtotal Makanan</span>
+          <span id="cart-subtotal">Rp0</span>
+        </div>
+        <div class="summary-row">
+          <span>Biaya Layanan &amp; Kemasan</span>
+          <span>Rp1.000</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total Pembayaran</span>
+          <span id="cart-total" style="color: var(--primary);">Rp0</span>
+        </div>
+      </div>
+
+      <button class="checkout-btn" id="cart-checkout-btn" onclick="checkoutOrder()">
+        Pesan Sekarang
+      </button>
+    </div>
+
+
+    <!-- ==========================================
+         DRAWER: SIDEBAR INFORMASI KANTIN
+         ========================================== -->
+    <aside class="info-drawer" id="info-drawer">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h3 style="font-size: 20px; font-weight: 800; color: var(--primary);">Informasi Kantin</h3>
+        <button class="close-drawer-btn" onclick="closeInfoDrawer()" aria-label="Tutup menu samping">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 18px; font-size: 14px; color: var(--text-main);">
+        <div style="background: var(--primary-tint); padding: 14px; border-radius: var(--radius-md);">
+          <div style="font-weight: 700; color: var(--primary); margin-bottom: 4px;">📍 Lokasi Kantin</div>
+          <div style="color: var(--text-muted); font-size: 13px;">Gedung Pusat Mahasiswa Lt. 1, Universitas Kampus Merdeka.</div>
+        </div>
+
+        <div style="background: var(--bg-app); padding: 14px; border-radius: var(--radius-md);">
+          <div style="font-weight: 700; color: var(--text-main); margin-bottom: 4px;">⏰ Jam Operasional</div>
+          <div style="color: var(--text-muted); font-size: 13px;">Senin - Jumat: 08.00 - 16.00 WIB<br>Sabtu &amp; Minggu: Tutup</div>
+        </div>
+
+        <div style="background: var(--bg-app); padding: 14px; border-radius: var(--radius-md);">
+          <div style="font-weight: 700; color: var(--text-main); margin-bottom: 4px;">💡 Cara Kerja KantinKu</div>
+          <ol style="margin-left: 18px; margin-top: 6px; font-size: 12.5px; color: var(--text-muted); line-height: 1.5;">
+            <li>Pilih menu makanan/minuman favorit.</li>
+            <li>Pesan sebelum jam jeda kuliah.</li>
+            <li>Tunjukkan nomor antrean di kasir tanpa perlu antre masak!</li>
+          </ol>
+        </div>
+      </div>
+
+      <div style="margin-top: auto; padding-top: 20px; text-align: center; font-size: 12px; color: var(--text-light);">
+        KantinKu &copy; 2026 &bull; Pesan Dulu, Ambil Cepat
+      </div>
+    </aside>
+
+    <!-- Modal Backdrop Overlay -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <!-- Toast Notification Popup -->
+    <div class="toast-notice" id="toast-notice"></div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
